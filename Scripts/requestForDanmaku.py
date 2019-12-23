@@ -1,5 +1,6 @@
 import os
 import sys
+import kotoba
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(BASE_DIR)
@@ -45,6 +46,7 @@ def saveDanmaku(url, avCode):
 			pass
 		print('缓存成功')
 		pass
+	kotoba.seperate(avCode)
 	return
 
 
