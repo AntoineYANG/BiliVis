@@ -63,8 +63,8 @@ def cut(text):
 
 def seperate(avCode):
     print("正在运用分词 ...")
-    with open('./cache/danmaku_av{}.bdm'.format(avCode), mode='r', encoding='utf-8') as file:
-        with open('./cache/kotoba_av{}.bdm'.format(avCode), mode='w', encoding='utf-8') as output:
+    with open('../scripts/cache/danmaku_av{}.bdm'.format(avCode), mode='r', encoding='utf-8') as file:
+        with open('../scripts/cache/kotoba_av{}.bdm'.format(avCode), mode='w', encoding='utf-8') as output:
             text = []
             for d in file.readlines():
                 each = "".join(d[:-1].split(',')[2:]).lower()

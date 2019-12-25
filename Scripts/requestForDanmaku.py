@@ -40,7 +40,7 @@ def saveDanmaku(url, avCode):
 		"text": d.string
 	} for d in soup.find_all('d')]
 	print('成功读取  {} 条弹幕'.format(len(danmakuList)))
-	with open('./cache/danmaku_av{}.bdm'.format(avCode), mode='w', encoding='utf-8') as cache:
+	with open('../scripts/cache/danmaku_av{}.bdm'.format(avCode), mode='w', encoding='utf-8') as cache:
 		for d in danmakuList:
 			cache.write(d["timeline"] + "," + d["time"] + "," + d["text"] + "\n")
 			pass
