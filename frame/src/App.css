@@ -20,6 +20,7 @@
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   background-attachment: fixed;
+  padding: 10vh;
 }
 
 input {
@@ -39,7 +40,7 @@ input::-webkit-outer-spin-button {
 .container {
   background-color: #FFFFFFC0;
   width: 124vh;
-  margin: 8vh;
+  margin: 4vh 0vh;
   padding: 3vh;
   min-height: 20vh;
 }

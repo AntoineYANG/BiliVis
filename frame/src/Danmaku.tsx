@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2019-12-25 22:55:48 
  * @Last Modified by: Antoine YANG
- * @Last Modified time: 2019-12-26 00:20:55
+ * @Last Modified time: 2019-12-26 22:40:35
  */
 
 import React, { Component } from 'react';
@@ -108,11 +108,21 @@ export class Danmaku extends Component<DanmakuProps, DanmakuState, {}> {
                 this.timeLen = item.beginTime;
             }
         });
-        this.loadIn();
+        this.loadIn(0);
     }
 
-    public loadIn(): void {
+    public loadIn(start: number): void {
+        this.setState({
+            list: []
+        });
+        this.handler.forEach((hd: NodeJS.Timeout) => {
+            clearTimeout(hd);
+        });
+        this.handler = [];
         this.list.forEach((item: VideoDanmakuInfo) => {
+            if (item.beginTime < start) {
+                return;
+            }
             this.handler.push(
                 setTimeout(() => {
                     let list: Array<string> = [];
@@ -128,7 +138,7 @@ export class Danmaku extends Component<DanmakuProps, DanmakuState, {}> {
                     this.setState({
                         list: list
                     });
-                }, Math.round(item.beginTime * 60000 / this.timeLen))
+                }, Math.round((item.beginTime - start) * 60000 / this.timeLen))
             );
         });
     }
