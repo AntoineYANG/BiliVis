@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2019-12-26 12:23:53 
  * @Last Modified by: Antoine YANG
- * @Last Modified time: 2019-12-26 22:36:24
+ * @Last Modified time: 2019-12-28 17:26:17
  */
 
 import React, { Component } from 'react';
@@ -61,6 +61,16 @@ export class PolylineChart extends Component<PolylineChartProps, PolylineChartSt
     }
 
     public render(): JSX.Element {
+        this.limit = {
+            left: this.props.rangeX ? this.props.rangeX[0]
+                : this.state.rangeX ? this.state.rangeX[0] : NaN,
+            right: this.props.rangeX ? this.props.rangeX[1]
+                : this.state.rangeX ? this.state.rangeX[1] : NaN,
+            bottom: this.props.rangeY ? this.props.rangeY[0]
+                : this.state.rangeY ? this.state.rangeY[0] : NaN,
+            top: this.props.rangeY ? this.props.rangeY[1]
+                : this.state.rangeY ? this.state.rangeY[1] : NaN
+        };
         if ((!this.props.rangeX && !this.state.rangeX) || (!this.props.rangeY && !this.state.rangeY)) {
             this.state.data.forEach((p: Polyline) => {
                 p.points.forEach((d: [number, number], i: number) => {
@@ -209,8 +219,8 @@ export class PolylineChart extends Component<PolylineChartProps, PolylineChartSt
                                 <>
                                     {   /* x 轴 */  }
                                     <line className="PolylineChartAxis" xmlns="http://www.w3.org/2000/svg" key={ "Xaxis" }
-                                    x1={ this.fx(this.limit.left) } y1={ this.fy(0) }
-                                    x2={ this.fx(this.limit.right) } y2={ this.fy(0) }
+                                    x1={ this.fx(this.limit.left) } y1={ this.fy(this.limit.bottom) }
+                                    x2={ this.fx(this.limit.right) } y2={ this.fy(this.limit.bottom) }
                                     style={{
                                         fill: 'none',
                                         stroke: 'black'
@@ -238,8 +248,8 @@ export class PolylineChart extends Component<PolylineChartProps, PolylineChartSt
                                     }
                                     {   /* y 轴 */  }
                                     <line className="PolylineChartAxis" xmlns="http://www.w3.org/2000/svg" key={ "Yaxis" }
-                                    x1={ this.fx(0) } y1={ this.fy(this.limit.bottom) }
-                                    x2={ this.fx(0) } y2={ this.fy(this.limit.top) }
+                                    x1={ this.fx(this.limit.left) } y1={ this.fy(this.limit.bottom) }
+                                    x2={ this.fx(this.limit.left) } y2={ this.fy(this.limit.top) }
                                     style={{
                                         fill: 'none',
                                         stroke: 'black'
@@ -312,7 +322,8 @@ export class PolylineChart extends Component<PolylineChartProps, PolylineChartSt
                         return (
                             <path className="PolylineChartItem" xmlns="http://www.w3.org/2000/svg" key={ i }
                             d={
-                                `M${ this.fx(0) },${ this.fy(0) }` + item.points.map((d: [number, number]) => {
+                                `M${ this.fx(this.limit.left) },${ this.fy(this.limit.bottom) }`
+                                + item.points.map((d: [number, number]) => {
                                     return ` L${ this.fx(d[0]) },${ this.fy(d[1]) }`;
                                 }).join("") + ` L${ this.fx(this.limit.right) },${ this.fy(0) }`
                             }

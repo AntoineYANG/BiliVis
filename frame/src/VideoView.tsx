@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2019-12-25 18:53:00 
  * @Last Modified by: Antoine YANG
- * @Last Modified time: 2019-12-26 23:18:49
+ * @Last Modified time: 2019-12-28 17:36:41
  */
 
 import React, { Component } from 'react';
@@ -63,7 +63,8 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
                         this.updatePolylineChart();
                         $("#OKbutton").css("background-color", "rgb(215, 103, 137)");
                     })
-                    .catch(() => {
+                    .catch((err) => {
+                        console.error(err);
                         console.warn("Failed to build connection with back-end server.");
                         $("#OKbutton").css("background-color", "rgb(215, 103, 137)");
                     });
@@ -148,13 +149,15 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
                 <div className="container"
                 style={{
                     height: '40vh',
+                    width: '126vh',
                     padding: '2vh'
                 }}>
-                    <PolylineChart ref="PolylineChart_Date" width='124vh' height='40vh'
+                    <PolylineChart ref="PolylineChart_Date" width='128vh' height='40vh'
+                    padding={{ top: 30, right: 30, bottom: 30, left: 40 }}
                     formatterX={
                         (num: number) => {
                             const date: Date = new Date(num);
-                            return `${ date.getFullYear() }-${ date.getMonth() }-${ date.getDate() }`;
+                            return `${ date.getFullYear() }-${ date.getMonth() + 1 }-${ date.getDate() }`;
                         }
                     }
                     formatterY={
@@ -186,9 +189,9 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
             if (item.beginTime > timeLen) {
                 timeLen = item.beginTime;
             }
-            const date: Date = new Date(item.date);
+            const date: Date = new Date(item.date * 1000);
             const dateId: number = + new Date(
-                `${ date.getFullYear() }-${ date.getMonth() }-${ date.getDate() } 00:00:00`
+                `${ date.getFullYear() }-${ date.getMonth() + 1 }-${ date.getDate() } 00:00:00`
             );
             if (isNaN(dateBegin) || dateId < dateBegin) {
                 dateBegin = dateId;
@@ -196,7 +199,7 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
         });
         const now: Date = new Date();
         for (let d: number = dateBegin; d <= + new Date(
-            `${ now.getFullYear() }-${ now.getMonth() }-${ now.getDate() } 00:00:00`
+            `${ now.getFullYear() }-${ now.getMonth() + 1 }-${ now.getDate() } 00:00:00`
         ); d += 86400000) {
             dateLine[dateLine.length] = [d, 0];
         }
@@ -206,11 +209,15 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
             for (let t: number = startTime; t <= endTime && t < precision; t++) {
                 pieces[t]++;
             }
-            const date: Date = new Date(e.date);
+            const date: Date = new Date(e.date * 1000);
             const dateId: number = + new Date(
-                `${ date.getFullYear() }-${ date.getMonth() }-${ date.getDate() } 00:00:00`
+                `${ date.getFullYear() }-${ date.getMonth() + 1 }-${ date.getDate() } 00:00:00`
             );
-            dateLine[Math.floor((dateId - dateBegin) / 86400000)][1]++;
+            try {
+                dateLine[Math.floor((dateId - dateBegin) / 86400000)][1]++;
+            } catch (error) {
+                console.error(error);
+            }
         });
         (this.refs["PolylineChart"] as PolylineChart).setState({
             data: [{
@@ -222,7 +229,8 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
         (this.refs["PolylineChart_Date"] as PolylineChart).setState({
             data: [{
                 points: dateLine
-            }]
+            }],
+            rangeX: [dateBegin, +now]
         });
     }
 }
