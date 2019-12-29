@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2019-12-26 12:23:53 
  * @Last Modified by: Antoine YANG
- * @Last Modified time: 2019-12-28 17:26:17
+ * @Last Modified time: 2019-12-29 09:52:04
  */
 
 import React, { Component } from 'react';
@@ -14,8 +14,8 @@ import Color from '../preference/Color';
 export class PolylineChart extends Component<PolylineChartProps, PolylineChartState, {}> {
     private padding: Box;
     private mounted: boolean;
-    private ticksX: (start: number, end: number) => Array<number>;
-    private ticksY: (start: number, end: number) => Array<number>;
+    private ticksX: (start: number, end: number, state: PolylineChartState) => Array<number>;
+    private ticksY: (start: number, end: number, state: PolylineChartState) => Array<number>;
     private formatterX: (value: number) => string;
     private formatterY: (value: number) => string;
     private focusLineX: boolean;
@@ -38,7 +38,47 @@ export class PolylineChart extends Component<PolylineChartProps, PolylineChartSt
         };
         this.padding = this.props.padding ? this.props.padding : { top: 30, right: 20, bottom: 30, left: 40 };
         this.mounted = false;
-        this.ticksX = this.props.ticksX ? this.props.ticksX : (start: number, end: number) => [start, end];
+        this.ticksX = this.props.ticksX ? this.props.ticksX : (start: number, end: number, state: PolylineChartState) => {
+            let box: Array<number> = [];
+            if (state.data.length) {
+                state.data.forEach((line: Polyline) => {
+                    let index: number = 0;
+                    let max = line.points[0][1];
+                    for (let i: number = 1; i < line.points.length; i++) {
+                        if (line.points[i][1] > max) {
+                            max = line.points[i][1];
+                            index = i;
+                        }
+                    }
+                    for (let i: number = 0; i <= box.length; i++) {
+                        if (i === box.length) {
+                            box.push(line.points[index][0]);
+                            break;
+                        } else if (box[i] === line.points[index][0]) {
+                            break;
+                        }
+                    }
+                });
+            }
+            let ifStart: boolean = true;
+            let ifEnd: boolean = true;
+            for (let i: number = 0; i < box.length; i++) {
+                if (!ifStart && !ifEnd) {
+                    break;
+                } else if (box[i] === start) {
+                    ifStart = false;
+                } else if (box[i] === end) {
+                    ifEnd = false;
+                }
+            }
+            if (ifStart) {
+                box = [start, ...box];
+            }
+            if (ifEnd) {
+                box = [...box, end];
+            }
+            return box;
+        };
         this.ticksY = this.props.ticksY ? this.props.ticksY : (start: number, end: number) => [start, end];
         this.formatterX = this.props.formatterX ? this.props.formatterX : (num: number) => num.toString();
         this.formatterY = this.props.formatterY ? this.props.formatterY : (num: number) => num.toString();
@@ -226,7 +266,8 @@ export class PolylineChart extends Component<PolylineChartProps, PolylineChartSt
                                         stroke: 'black'
                                     }}/>
                                     {
-                                        this.ticksX(this.limit.left, this.limit.right).map((value: number, index: number) => {
+                                        this.ticksX(this.limit.left, this.limit.right, this.state)
+                                        .map((value: number, index: number) => {
                                             return (
                                                 <text className="PolylineChartTickLabel" xmlns="http://www.w3.org/2000/svg"
                                                 key={ "XtickLabel" + index }
@@ -255,7 +296,8 @@ export class PolylineChart extends Component<PolylineChartProps, PolylineChartSt
                                         stroke: 'black'
                                     }}/>
                                     {
-                                        this.ticksY(this.limit.bottom, this.limit.top).map((value: number, index: number) => {
+                                        this.ticksY(this.limit.bottom, this.limit.top, this.state)
+                                        .map((value: number, index: number) => {
                                             return (
                                                 <text className="PolylineChartTickLabel" xmlns="http://www.w3.org/2000/svg"
                                                 key={ "YtickLabel" + index }

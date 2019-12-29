@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2019-12-25 22:15:15 
  * @Last Modified by: Antoine YANG
- * @Last Modified time: 2019-12-26 21:06:13
+ * @Last Modified time: 2019-12-29 10:05:42
  */
 
 
@@ -19,6 +19,14 @@ export interface Box {
     left: number;
 }
 
+export interface DanmakuProps {
+    toWordView: (word: string | boolean) => void;
+};
+
+export interface DanmakuState {
+    list: Array<string>;
+};
+
 export interface PolylineChartProps {
     id?: string;
     width: number | string;
@@ -28,8 +36,8 @@ export interface PolylineChartProps {
     rangeY?: [number, number];
     style?: React.CSSProperties;
     lineStyle?: React.CSSProperties;
-    ticksX?: (start: number, end: number) => Array<number>;
-    ticksY?: (start: number, end: number) => Array<number>;
+    ticksX?: (start: number, end: number, state: PolylineChartState) => Array<number>;
+    ticksY?: (start: number, end: number, state: PolylineChartState) => Array<number>;
     formatterX?: (value: number) => string;
     formatterY?: (value: number) => string;
     focusLineX?: boolean;
@@ -47,4 +55,10 @@ export interface PolylineChartState {
     data: Array<Polyline>;
     rangeX?: [number, number];
     rangeY?: [number, number];
+}
+
+export interface KeyWordViewProps {}
+
+export interface KeyWordViewState {
+    words: {[word: string]: number};
 }

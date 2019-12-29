@@ -2,19 +2,13 @@
  * @Author: Antoine YANG 
  * @Date: 2019-12-25 22:55:48 
  * @Last Modified by: Antoine YANG
- * @Last Modified time: 2019-12-26 22:40:35
+ * @Last Modified time: 2019-12-29 10:19:54
  */
 
 import React, { Component } from 'react';
 import $ from 'jquery';
-import { VideoDanmakuInfo } from './InnerType';
+import { VideoDanmakuInfo, DanmakuProps, DanmakuState } from './InnerType';
 
-
-interface DanmakuProps {};
-
-interface DanmakuState {
-    list: Array<string>;
-};
 
 export class Danmaku extends Component<DanmakuProps, DanmakuState, {}> {
     private timeLen: number;
@@ -87,6 +81,7 @@ export class Danmaku extends Component<DanmakuProps, DanmakuState, {}> {
         if (this.state.list.length === 0) {
             return;
         }
+        this.props.toWordView(this.state.list[this.state.list.length - 1]);
         const last: JQuery<HTMLElement> = $(this.refs[`item${ this.state.list.length - 1 }`] as any);
         $(".DanmakuPiece").css("transform", "translateY(0)");
         const position: number = last.position().top + last.height()! - $(this.refs["table"]).position().top;
@@ -108,6 +103,7 @@ export class Danmaku extends Component<DanmakuProps, DanmakuState, {}> {
                 this.timeLen = item.beginTime;
             }
         });
+        this.props.toWordView(false);
         this.loadIn(0);
     }
 
@@ -115,6 +111,7 @@ export class Danmaku extends Component<DanmakuProps, DanmakuState, {}> {
         this.setState({
             list: []
         });
+        this.props.toWordView(false);
         this.handler.forEach((hd: NodeJS.Timeout) => {
             clearTimeout(hd);
         });

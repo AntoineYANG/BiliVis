@@ -2,7 +2,7 @@
  * @Author: Antoine YANG 
  * @Date: 2019-12-25 18:53:00 
  * @Last Modified by: Antoine YANG
- * @Last Modified time: 2019-12-28 17:36:41
+ * @Last Modified time: 2019-12-29 10:55:07
  */
 
 import React, { Component } from 'react';
@@ -13,6 +13,7 @@ import { VideoDanmakuInfo } from './InnerType';
 import Color from './preference/Color';
 import { Danmaku } from './Danmaku';
 import { PolylineChart } from './charts/PolylineChart';
+import { KeyWordView } from './KeyWordView';
 
 
 interface VideoViewProps {};
@@ -110,6 +111,7 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
                         让弹幕飞一会儿吧
                     </button>
                 </div>
+                <KeyWordView ref="KeyWordView" />
                 <div className="container"
                 style={{
                     display: 'inline-block',
@@ -119,6 +121,16 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
                     marginRight: '8vh'
                 }}>
                     <PolylineChart ref="PolylineChart" width='74vh' height='40vh'
+                    ticksY={
+                        (start: number, end: number) => {
+                            let spans: Array<number> = [];
+                            for (let i: number = start; i < end - Math.floor(Math.floor((end - start) / 5) / 5) * 3;
+                            i += Math.floor(Math.floor((end - start) / 5) / 5) * 5) {
+                                spans.push(i);
+                            }
+                            return [...spans, end];
+                        }
+                    }
                     formatterX={
                         (num: number) => {
                             const hour: number = Math.floor(num / 3600);
@@ -145,15 +157,29 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
                         fill: Color.setLightness('rgb(215,103,137)', 0.8)
                     }}/>
                 </div>
-                <Danmaku ref="Danmaku" />
+                <Danmaku ref="Danmaku" toWordView={
+                    (word: string | boolean) => {
+                        (this.refs["KeyWordView"] as KeyWordView).cmd(word);
+                    }
+                } />
                 <div className="container"
                 style={{
-                    height: '40vh',
+                    height: '30vh',
                     width: '126vh',
                     padding: '2vh'
                 }}>
-                    <PolylineChart ref="PolylineChart_Date" width='128vh' height='40vh'
+                    <PolylineChart ref="PolylineChart_Date" width='128vh' height='30vh'
                     padding={{ top: 30, right: 30, bottom: 30, left: 40 }}
+                    ticksY={
+                        (start: number, end: number) => {
+                            let spans: Array<number> = [];
+                            for (let i: number = start; i < end - Math.floor(Math.floor((end - start) / 5) / 5) * 3;
+                            i += Math.floor(Math.floor((end - start) / 5) / 5) * 5) {
+                                spans.push(i);
+                            }
+                            return [...spans, end];
+                        }
+                    }
                     formatterX={
                         (num: number) => {
                             const date: Date = new Date(num);
