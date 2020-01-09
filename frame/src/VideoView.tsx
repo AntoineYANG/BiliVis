@@ -14,6 +14,7 @@ import Color from './preference/Color';
 import { Danmaku } from './Danmaku';
 import { PolylineChart } from './charts/PolylineChart';
 import { KeyWordView } from './KeyWordView';
+import { AchievementView } from './AchievementView';
 
 
 interface VideoViewProps {};
@@ -111,6 +112,7 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
                         让弹幕飞一会儿吧
                     </button>
                 </div>
+                <AchievementView ref="AchievementView" />
                 <KeyWordView ref="KeyWordView" />
                 <div className="container"
                 style={{
@@ -164,11 +166,11 @@ export class VideoView extends Component<VideoViewProps, VideoViewState, {}> {
                 } />
                 <div className="container"
                 style={{
-                    height: '30vh',
+                    height: '20vh',
                     width: '126vh',
                     padding: '2vh'
                 }}>
-                    <PolylineChart ref="PolylineChart_Date" width='128vh' height='30vh'
+                    <PolylineChart ref="PolylineChart_Date" width='128vh' height='20vh'
                     padding={{ top: 30, right: 30, bottom: 30, left: 40 }}
                     ticksY={
                         (start: number, end: number) => {

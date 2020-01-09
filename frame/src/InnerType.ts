@@ -62,3 +62,17 @@ export interface KeyWordViewProps {}
 export interface KeyWordViewState {
     words: {[word: string]: number};
 }
+
+export interface Achievement {
+    kusa: number;
+    tomaranai: number;
+    awsl: number;
+    danmakuumi: number;
+    op: number;
+}
+
+export interface AchievementViewProps {}
+
+export interface AchievementViewState {
+    process: Achievement;
+}

@@ -9,6 +9,7 @@ import React, { Component } from 'react';
 import { KeyWordViewProps, KeyWordViewState } from './InnerType';
 import Color from './preference/Color';
 
+
 export class KeyWordView extends Component<KeyWordViewProps, KeyWordViewState, {}> {
     public constructor(props: KeyWordViewProps) {
         super(props);
@@ -21,8 +22,8 @@ export class KeyWordView extends Component<KeyWordViewProps, KeyWordViewState, {
         return (
             <div className="container"
             style={{
-                minHeight: '5vh',
-                height: '5vh',
+                minHeight: '4.8vh',
+                height: '4.8vh',
                 width: '126vh',
                 padding: '1vh 2vh',
                 overflow: 'hidden',
@@ -33,9 +34,9 @@ export class KeyWordView extends Component<KeyWordViewProps, KeyWordViewState, {
                         return b[1] - a[1];
                     }).slice(0, Math.min(Object.entries(this.state.words).length, 20)).map((item: [string, number]) => {
                         return (
-                            <span key={ item[0] }
+                            <span key={ item[0] } ref={ item[0] }
                             style={{
-                                margin: '0.5vh 14px 0.5vh 0px',
+                                margin: '0.5vh 14px 1vh 0px',
                                 padding: '0vh 1vh',
                                 fontSize: '14px',
                                 fontWeight: 'bold',
@@ -49,7 +50,7 @@ export class KeyWordView extends Component<KeyWordViewProps, KeyWordViewState, {
                                 : item[1] < 500 ? Color.Nippon.Torinoko
                                 : item[1] < 1000 ? Color.Nippon.Akabeni
                                 : 'rgb(215,103,137)',
-                                letterSpacing: `${ 10 - 9 / Math.sqrt(item[1]) }px`
+                                letterSpacing: `2px`
                             }}>
                                 { item[0] }
                                 <span key={ item[0] + "value" }
